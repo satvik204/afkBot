@@ -50,20 +50,30 @@ function createBot() {
 function checkTimeAndSleep(bot) {
     if (!bot.time) return; // Skip if time is not available yet
 
-    const isNight = bot.time.timeOfDay >= 13000 && bot.time.timeOfDay <= 23000; // Nighttime range in Minecraft
+    const isNight = bot.time.timeOfDay >= 13000 && bot.time.timeOfDay <= 23000; // Nighttime range
     const bed = bot.findBlock({
-        matching: block => bot.isABed(block), // Find a nearby bed
-        maxDistance: 2
+        matching: block => block.name.includes('bed'), // Ensure proper bed detection
+        maxDistance: 10
     });
 
+    // Ensure the bot is not already sleeping
+    if (bot.isSleeping) {
+        console.log('Bot is already sleeping. Skipping sleep attempt.');
+        return;
+    }
+
     if (isNight && bed) {
-        console.log('It is nighttime. Trying to sleep...');
-        bot.sleep(bed, (err) => {
-            if (err) {
-                console.log('Failed to sleep:', err.message);
-            } else {
-                console.log('Bot is now sleeping.');
-            }
+        console.log('It is nighttime. Moving to bed...');
+        bot.pathfinder.setGoal(new goals.GoalNear(bed.position.x, bed.position.y, bed.position.z, 1));
+        
+        bot.once('goal_reached', () => {
+            bot.sleep(bed, (err) => {
+                if (err) {
+                    console.log('Failed to sleep:', err.message);
+                } else {
+                    console.log('Bot is now sleeping.');
+                }
+            });
         });
     } else if (!isNight) {
         console.log('It is not nighttime. Staying awake.');
