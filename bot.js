@@ -1,8 +1,8 @@
 const mineflayer = require('mineflayer');
+const { pathfinder, Movements, goals } = require('mineflayer-pathfinder'); // Import pathfinder
 const express = require('express');
 const app = express();
 
-// Example of bot logic (can be replaced with actual bot code)
 app.get('/', (req, res) => {
     res.send('Bot is running!');
 });
@@ -20,12 +20,19 @@ function createBot() {
         version: false // Specify version if needed (e.g., '1.19.3')
     });
 
+    bot.loadPlugin(pathfinder); // Load the pathfinder plugin
+
     bot.on('login', () => {
         console.log('Bot has logged in!');
         bot.chat('Hello! I am now online.');
 
-        // Start walking to a goal or target position
-        bot.pathfinder.setGoal(new mineflayer.pathfinder.goals.GoalNear(10, 64, 10, 1)); // Example goal coordinates
+        // Set up movements
+        const defaultMove = new Movements(bot, bot.world);
+        bot.pathfinder.setMovements(defaultMove);
+
+        // Start moving to a specific location
+        const goal = new goals.GoalNear(10, 64, 10, 1); // Replace with desired coordinates
+        bot.pathfinder.setGoal(goal);
     });
 
     bot.on('chat', (username, message) => {
@@ -39,21 +46,16 @@ function createBot() {
     });
 
     // Handle sleep logic
-    let currentGoal = null;
-
     bot.on('playerUpdate', (player) => {
-        if (player.username === bot.username) return; // Skip the bot's own sleeping state
+        if (player.username === bot.username) return; // Ignore the bot's own sleep status
 
         if (player.sleeping) {
             console.log('Player is sleeping, bot is stopping...');
-            bot.pathfinder.setGoal(null);  // Stop the bot from moving
+            bot.pathfinder.setGoal(null); // Stop the bot from moving
         } else {
             console.log('Player is awake, bot is moving...');
-            if (!currentGoal) {
-                // Start moving again if the bot wasn't already moving
-                currentGoal = new mineflayer.pathfinder.goals.GoalNear(10, 64, 10, 1); // Example goal coordinates
-                bot.pathfinder.setGoal(currentGoal); // Set the goal again
-            }
+            const goal = new goals.GoalNear(10, 64, 10, 1); // Replace with desired coordinates
+            bot.pathfinder.setGoal(goal); // Set the goal again
         }
     });
 
