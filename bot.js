@@ -1,4 +1,16 @@
 const mineflayer = require('mineflayer');
+const express = require('express');
+const app = express();
+
+// Example of bot logic (can be replaced with actual bot code)
+app.get('/', (req, res) => {
+    res.send('Bot is running!');
+});
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Bot is running on port ${port}`);
+});
 
 function createBot() {
     const bot = mineflayer.createBot({
