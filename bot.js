@@ -48,7 +48,7 @@ function handleDayNightCycle(bot) {
     const isNight = bot.time.timeOfDay >= 13000 && bot.time.timeOfDay <= 23000; // Nighttime range
     const bed = bot.findBlock({
         matching: block => block.name.includes('bed'), // Find bed blocks
-        maxDistance: 20 // Search within a 20-block radius
+        maxDistance: 2// Search within a 20-block radius
     });
 
     if (isNight) {
