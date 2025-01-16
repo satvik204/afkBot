@@ -12,8 +12,6 @@ app.listen(port, () => {
     console.log(`Bot is running on port ${port}`);
 });
 
-
-
 function createBot() {
     const bot = mineflayer.createBot({
         host: 'brotula.aternos.host', // Replace with your server's IP
@@ -26,9 +24,8 @@ function createBot() {
         console.log('Bot has logged in!');
         bot.chat('Hello! I am now online.');
 
-        setInterval(() => {
-                bot.chat("Anju aunty xxx");
-        },5000)
+        // Start walking to a goal or target position
+        bot.pathfinder.setGoal(new mineflayer.pathfinder.goals.GoalNear(10, 64, 10, 1)); // Example goal coordinates
     });
 
     bot.on('chat', (username, message) => {
@@ -41,16 +38,25 @@ function createBot() {
         setTimeout(createBot, 5000); // Recreate the bot instance
     });
 
+    // Handle sleep logic
+    let currentGoal = null;
 
     bot.on('playerUpdate', (player) => {
-    if (player.sleeping) {
-        // Pause bot actions while the player is sleeping
-        bot.pause();
-    } else {
-        // Resume bot actions
-        bot.resume();
-    }
-});
+        if (player.username === bot.username) return; // Skip the bot's own sleeping state
+
+        if (player.sleeping) {
+            console.log('Player is sleeping, bot is stopping...');
+            bot.pathfinder.setGoal(null);  // Stop the bot from moving
+        } else {
+            console.log('Player is awake, bot is moving...');
+            if (!currentGoal) {
+                // Start moving again if the bot wasn't already moving
+                currentGoal = new mineflayer.pathfinder.goals.GoalNear(10, 64, 10, 1); // Example goal coordinates
+                bot.pathfinder.setGoal(currentGoal); // Set the goal again
+            }
+        }
+    });
+
     bot.on('error', (err) => console.log('Error:', err));
 }
 
