@@ -53,7 +53,7 @@ function checkTimeAndSleep(bot) {
     const isNight = bot.time.timeOfDay >= 13000 && bot.time.timeOfDay <= 23000; // Nighttime range in Minecraft
     const bed = bot.findBlock({
         matching: block => bot.isABed(block), // Find a nearby bed
-        maxDistance: 4
+        maxDistance: 2
     });
 
     if (isNight && bed) {
