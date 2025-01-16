@@ -26,6 +26,10 @@ function createBot() {
         console.log('Bot has logged in!');
         const defaultMove = new Movements(bot, bot.world);
         bot.pathfinder.setMovements(defaultMove);
+
+        setInterval(()=>{
+         bot.chat('Anju Aunty xxx');
+        },1000)
     });
 
     bot.on('time', () => {
