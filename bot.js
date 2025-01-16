@@ -19,7 +19,7 @@ function createBot() {
         username: 'AfkSatvik', // Replace with the bot's username
         version: false // Specify version if needed (e.g., '1.19.3')
     });
-
+bot.loadPlugin('pathfinder')
 
     bot.on('login', () => {
         console.log('Bot has logged in!');
