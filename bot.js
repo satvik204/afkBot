@@ -29,7 +29,8 @@ function createBot() {
 
         setInterval(()=>{
          bot.chat('Anju Aunty xxx');
-        },1000)
+              moveRandomly(bot);
+        },10000)
     });
 
     bot.on('time', () => {
@@ -85,4 +86,12 @@ function handleDayNightCycle(bot) {
     }
 }
 
+function moveRandomly(bot) {
+    const x = bot.entity.position.x + (Math.random() * 2 - 1);  // Random movement within -1 to 1 blocks on X
+    const y = bot.entity.position.y;  // Keep the same Y position (bot stays on the ground)
+    const z = bot.entity.position.z + (Math.random() * 2 - 1);  // Random movement within -1 to 1 blocks on Z
+
+    // Move the bot to the new position within 2 blocks radius
+    bot.pathfinder.setGoal(new goals.GoalNear(x, y, z, 0.5)); // Goal within a 0.5-block radius
+}
 createBot();
