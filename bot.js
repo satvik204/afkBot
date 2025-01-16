@@ -12,15 +12,7 @@ app.listen(port, () => {
     console.log(`Bot is running on port ${port}`);
 });
 
-bot.on('playerUpdate', (player) => {
-    if (player.sleeping) {
-        // Pause bot actions while the player is sleeping
-        bot.pause();
-    } else {
-        // Resume bot actions
-        bot.resume();
-    }
-});
+
 
 function createBot() {
     const bot = mineflayer.createBot({
@@ -49,6 +41,16 @@ function createBot() {
         setTimeout(createBot, 5000); // Recreate the bot instance
     });
 
+
+    bot.on('playerUpdate', (player) => {
+    if (player.sleeping) {
+        // Pause bot actions while the player is sleeping
+        bot.pause();
+    } else {
+        // Resume bot actions
+        bot.resume();
+    }
+});
     bot.on('error', (err) => console.log('Error:', err));
 }
 
