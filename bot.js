@@ -1,5 +1,5 @@
 const mineflayer = require('mineflayer');
-const { pathfinder, Movements, goals } = require('mineflayer-pathfinder'); // Import pathfinder
+const { pathfinder, Movements, goals } = require('mineflayer-pathfinder');
 const express = require('express');
 const app = express();
 
@@ -26,13 +26,13 @@ function createBot() {
         console.log('Bot has logged in!');
         bot.chat('Hello! I am now online.');
 
-        // Set up movements
-        const defaultMove = new Movements(bot, bot.world);
-        bot.pathfinder.setMovements(defaultMove);
+    
 
-        // Start moving to a specific location
-        const goal = new goals.GoalNear(10, 64, 10, 1); // Replace with desired coordinates
-        bot.pathfinder.setGoal(goal);
+        checkTimeAndSleep(bot);
+    });
+
+    bot.on('time', () => {
+        checkTimeAndSleep(bot); // Continuously check time to sleep if necessary
     });
 
     bot.on('chat', (username, message) => {
@@ -45,21 +45,32 @@ function createBot() {
         setTimeout(createBot, 5000); // Recreate the bot instance
     });
 
-    // Handle sleep logic
-    bot.on('playerUpdate', (player) => {
-        if (player.username === bot.username) return; // Ignore the bot's own sleep status
+    bot.on('error', (err) => console.log('Error:', err));
+}
 
-        if (player.sleeping) {
-            console.log('Player is sleeping, bot is stopping...');
-            bot.pathfinder.setGoal(null); // Stop the bot from moving
-        } else {
-            console.log('Player is awake, bot is moving...');
-            const goal = new goals.GoalNear(10, 64, 10, 1); // Replace with desired coordinates
-            bot.pathfinder.setGoal(goal); // Set the goal again
-        }
+function checkTimeAndSleep(bot) {
+    if (!bot.time) return; // Skip if time is not available yet
+
+    const isNight = bot.time.timeOfDay >= 13000 && bot.time.timeOfDay <= 23000; // Nighttime range in Minecraft
+    const bed = bot.findBlock({
+        matching: block => bot.isABed(block), // Find a nearby bed
+        maxDistance: 10
     });
 
-    bot.on('error', (err) => console.log('Error:', err));
+    if (isNight && bed) {
+        console.log('It is nighttime. Trying to sleep...');
+        bot.sleep(bed, (err) => {
+            if (err) {
+                console.log('Failed to sleep:', err.message);
+            } else {
+                console.log('Bot is now sleeping.');
+            }
+        });
+    } else if (!isNight) {
+        console.log('It is not nighttime. Staying awake.');
+    } else {
+        console.log('No bed found nearby.');
+    }
 }
 
 createBot();
