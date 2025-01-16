@@ -20,7 +20,6 @@ function createBot() {
         version: false // Specify version if needed (e.g., '1.19.3')
     });
 
-    bot.loadPlugin(pathfinder); // Load the pathfinder plugin
 
     bot.on('login', () => {
         console.log('Bot has logged in!');
