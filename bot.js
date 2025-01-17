@@ -33,7 +33,7 @@ function createBot() {
     });
 
     bot.on('time', () => {
-        checkTimeandSleep(bot);
+        checkTimeAndSleep(bot);
     });
 
     bot.on('end', () => {
