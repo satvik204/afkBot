@@ -27,12 +27,12 @@ function createBot() {
         const defaultMove = new Movements(bot, bot.world);
         bot.pathfinder.setMovements(defaultMove);
 
-        setInterval(()=>{
-              moveRandomly(bot);
-        },3000)
+        // Move randomly every 3 seconds (only at night)
+        setInterval(() => moveRandomly(bot), 3000);
     });
 
-    bot.on('time', checkTimeAndSleep(bot) );
+    // Correctly listen for time changes
+    bot.on('time', () => checkTimeAndSleep(bot));
 
     bot.on('end', () => {
         console.log('Bot disconnected. Reconnecting in 5 seconds...');
@@ -43,9 +43,17 @@ function createBot() {
         console.error('Error:', err);
     });
 }
- // Function to find the nearest bed function 
- function findBed(bot) { const bedBlock = bot.findBlock({ matching: block => bot.isABed(block), maxDistance: 5  }); return bedBlock; } // Function to move to bed and sleep 
-    function checkTimeAndSleep(bot) {function checkTimeAndSleep(bot) {
+
+// Function to find the nearest bed
+function findBed(bot) {
+    return bot.findBlock({
+        matching: block => block.name.includes('bed'), // Corrected bed detection
+        maxDistance: 5  // Look for a bed within 5 blocks
+    });
+}
+
+// Function to move to bed and sleep
+function checkTimeAndSleep(bot) {
     if (!bot || !bot.time || bot.time.day === undefined) {
         console.log("Bot or bot.time is not ready! Skipping sleep check.");
         return;
@@ -70,14 +78,17 @@ function createBot() {
     } else {
         console.log('It is daytime. No need to sleep.');
     }
-} 
-
-function moveRandomly(bot) {
-    const x = bot.entity.position.x + (Math.random() * 2 - 1);  // Random movement within -1 to 1 blocks on X
-    const y = bot.entity.position.y;  // Keep the same Y position (bot stays on the ground
-    const z = bot.entity.position.z + (Math.random() * 2 - 1);  // Random movement within -1 to 1 blocks on Z
-
-    // Move the bot to the new position within 2 blocks radius
-    bot.pathfinder.setGoal(new goals.GoalNear(x, y, z, 0.5)); // Goal within a 0.5-block radius
 }
+
+// Function to move randomly within a 2-block radius at night
+function moveRandomly(bot) {
+    if (!bot.time.isNight) return; // Only move at night
+
+    const x = bot.entity.position.x + (Math.random() * 2 - 1); // Move -1 to 1 blocks in X
+    const z = bot.entity.position.z + (Math.random() * 2 - 1); // Move -1 to 1 blocks in Z
+
+    bot.pathfinder.setGoal(new goals.GoalNear(x, bot.entity.position.y, z, 0.5)); // Move to the random spot
+}
+
+// Start the bot
 createBot();
