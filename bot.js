@@ -14,7 +14,7 @@ app.listen(port, () => {
 
 function createBot() {
     const bot = mineflayer.createBot({
-        host: 'brotula.aternos.host', // Replace with your server's IP
+        host: 'dragonsmp-sYzM.aternos.me', // Replace with your server's IP
         port: 55911, // Replace with your server's port
         username: 'AfkSatvik', // Bot's username
         version: false // Specify version if needed (e.g., '1.19.3')
