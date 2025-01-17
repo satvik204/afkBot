@@ -32,7 +32,7 @@ function createBot() {
         },3000)
     });
 
-    bot.on('time', checkTimeAndSleep; );
+    bot.on('time', checkTimeAndSleep );
 
     bot.on('end', () => {
         console.log('Bot disconnected. Reconnecting in 5 seconds...');
