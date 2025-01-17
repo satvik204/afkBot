@@ -17,10 +17,7 @@ function createBot() {
         version: false // Specify version if needed (e.g., '1.19.3')
     });
 
-    app.get('/', (req, res) => {
-    res.send(`Bot is running! `);
-    console.log(bot.time);
-});
+
 
     bot.loadPlugin(pathfinder);
 
@@ -35,7 +32,10 @@ function createBot() {
 
     // Correctly listen for time changes
     bot.on('time', () => checkTimeAndSleep(bot));
-
+    app.get('/', (req, res) => {
+    res.send(`Bot is running! `);
+    console.log(bot.time);
+});
     bot.on('end', () => {
         console.log('Bot disconnected. Reconnecting in 5 seconds...');
         setTimeout(createBot, 5000);
