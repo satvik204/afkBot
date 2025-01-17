@@ -45,7 +45,32 @@ function createBot() {
 }
  // Function to find the nearest bed function 
  function findBed(bot) { const bedBlock = bot.findBlock({ matching: block => bot.isABed(block), maxDistance: 5  }); return bedBlock; } // Function to move to bed and sleep 
-    function checkTimeAndSleep(bot) { if (bot.time.isNight) { const bed = findBed(bot); if (bed) { console.log('Found a bed! Moving towards it...'); bot.pathfinder.setGoal(new goals.GoalBlock(bed.position.x, bed.position.y, bed.position.z)); bot.once('goal_reached', () => { console.log('Bot reached the bed. Trying to sleep...'); bot.sleep(bed).catch(err => { console.log('Failed to sleep:', err.message); }); }); } else { console.log('No bed found nearby!'); } } } 
+    function checkTimeAndSleep(bot) {function checkTimeAndSleep(bot) {
+    if (!bot || !bot.time || bot.time.day === undefined) {
+        console.log("Bot or bot.time is not ready! Skipping sleep check.");
+        return;
+    }
+
+    if (bot.time.isNight) {
+        const bed = findBed(bot);
+
+        if (bed) {
+            console.log('Found a bed! Moving towards it...');
+            bot.pathfinder.setGoal(new goals.GoalBlock(bed.position.x, bed.position.y, bed.position.z));
+
+            bot.once('goal_reached', () => {
+                console.log('Bot reached the bed. Trying to sleep...');
+                bot.sleep(bed).catch(err => {
+                    console.log('Failed to sleep:', err.message);
+                });
+            });
+        } else {
+            console.log('No bed found nearby!');
+        }
+    } else {
+        console.log('It is daytime. No need to sleep.');
+    }
+} 
 
 function moveRandomly(bot) {
     const x = bot.entity.position.x + (Math.random() * 2 - 1);  // Random movement within -1 to 1 blocks on X
