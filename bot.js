@@ -59,7 +59,7 @@ function checkTimeAndSleep(bot) {
         return;
     }
 
-    if (bot.time.isNight) {
+    if (bot.time.day >= 12000) {
         const bed = findBed(bot);
 
         if (bed) {
