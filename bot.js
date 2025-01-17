@@ -63,7 +63,7 @@ function checkTimeAndSleep(bot) {
         return;
     }
 
-    console.log(bot.time , '67')
+    console.log(bot.time.time , '67')
     if (bot.time>= 12000 || bot.world.time>= 12000  ) {
         const bed = findBed(bot);
 
