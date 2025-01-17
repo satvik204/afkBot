@@ -3,9 +3,6 @@ const { pathfinder, Movements, goals } = require('mineflayer-pathfinder');
 const express = require('express');
 const app = express();
 
-app.get('/', (req, res) => {
-    res.send('Bot is running!');
-});
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
@@ -19,6 +16,10 @@ function createBot() {
         username: 'AfkSatvik', // Bot's username
         version: false // Specify version if needed (e.g., '1.19.3')
     });
+
+    app.get('/', (req, res) => {
+    res.send(`Bot is running! ${bot}`);
+});
 
     bot.loadPlugin(pathfinder);
 
