@@ -18,7 +18,8 @@ function createBot() {
     });
 
     app.get('/', (req, res) => {
-    res.send(`Bot is running! ${bot}`);
+    res.send(`Bot is running! `);
+    console.log(bot);
 });
 
     bot.loadPlugin(pathfinder);
