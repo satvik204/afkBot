@@ -32,8 +32,7 @@ function createBot() {
 
     // Correctly listen for time changes
     bot.on('time', () => {checkTimeAndSleep(bot);
-                             console.log(bot.time);
-                              console.log(bot.world.time);
+                           
                          });
     app.get('/', (req, res) => {
     res.send(`Bot is running! `);
@@ -64,6 +63,7 @@ function checkTimeAndSleep(bot) {
         return;
     }
 
+    console.log(bot.world.time , '67')
     if (bot.time>= 12000 || bot.world.time>= 12000  ) {
         const bed = findBed(bot);
 
