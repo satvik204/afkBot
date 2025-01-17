@@ -29,12 +29,10 @@ function createBot() {
 
         setInterval(()=>{
               moveRandomly(bot);
-        },10000)
+        },3000)
     });
 
-    bot.on('time', () => {
-        checkTimeAndSleep(bot);
-    });
+    bot.on('time', checkTimeAndSleep; );
 
     bot.on('end', () => {
         console.log('Bot disconnected. Reconnecting in 5 seconds...');
