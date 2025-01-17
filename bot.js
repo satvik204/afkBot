@@ -31,10 +31,13 @@ function createBot() {
     });
 
     // Correctly listen for time changes
-    bot.on('time', () => checkTimeAndSleep(bot));
+    bot.on('time', () => {checkTimeAndSleep(bot);
+                             console.log(bot.time);
+                              console.log(bot.world.time);
+                         });
     app.get('/', (req, res) => {
     res.send(`Bot is running! `);
-    console.log(bot.time);
+
 });
     bot.on('end', () => {
         console.log('Bot disconnected. Reconnecting in 5 seconds...');
