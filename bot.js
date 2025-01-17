@@ -28,7 +28,6 @@ function createBot() {
         bot.pathfinder.setMovements(defaultMove);
 
         setInterval(()=>{
-         bot.chat('Anju Aunty xxx');
               moveRandomly(bot);
         },10000)
     });
